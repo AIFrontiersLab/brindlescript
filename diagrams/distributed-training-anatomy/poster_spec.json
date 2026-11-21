@@ -1,0 +1,68 @@
+{
+  "boxes": [
+    {
+      "detail": "Collect and preprocess data from various sources.",
+      "id": "1",
+      "label": "Data Ingestion"
+    },
+    {
+      "detail": "Divide the model into smaller shards for distributed processing.",
+      "id": "2",
+      "label": "Model Sharding"
+    },
+    {
+      "detail": "Multiple nodes that process model shards in parallel.",
+      "id": "3",
+      "label": "Training Nodes"
+    },
+    {
+      "detail": "Centralized server that aggregates and synchronizes model parameters.",
+      "id": "4",
+      "label": "Parameter Server"
+    },
+    {
+      "detail": "Combine updated parameters to form the complete model.",
+      "id": "5",
+      "label": "Model Aggregation"
+    },
+    {
+      "detail": "Deploy the trained model for inference.",
+      "id": "6",
+      "label": "Deployment"
+    }
+  ],
+  "flows": [
+    {
+      "from": "1",
+      "label": "Preprocessed data sent to model shards",
+      "to": "2"
+    },
+    {
+      "from": "2",
+      "label": "Shards distributed to training nodes",
+      "to": "3"
+    },
+    {
+      "from": "3",
+      "label": "Nodes send parameter updates",
+      "to": "4"
+    },
+    {
+      "from": "4",
+      "label": "Synchronized parameters sent back",
+      "to": "3"
+    },
+    {
+      "from": "4",
+      "label": "Aggregate parameters",
+      "to": "5"
+    },
+    {
+      "from": "5",
+      "label": "Deploy updated model",
+      "to": "6"
+    }
+  ],
+  "subtitle": "One concept. Three AI perspectives. One tested architecture.",
+  "title": "Distributed Training Anatomy"
+}

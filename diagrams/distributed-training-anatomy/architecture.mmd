@@ -1,0 +1,30 @@
+flowchart LR
+  1["Data Ingestion"]
+  2["Model Sharding"]
+  3["Training Nodes"]
+  4["Parameter Server"]
+  5["Model Aggregation"]
+  6["Deployment"]
+  1 -->|Preprocessed data sent to model shards| 2
+  2 -->|Shards distributed to training nodes| 3
+  3 -->|Nodes send parameter updates| 4
+  4 -->|Synchronized parameters sent back| 3
+  4 -->|Aggregate parameters| 5
+  5 -->|Deploy updated model| 6
+
+flowchart TB
+  subgraph happy [Happy path]
+    h_1["Data Ingestion"]
+    h_2["Model Sharding"]
+    h_3["Training Nodes"]
+    h_4["Parameter Server"]
+    h_5["Model Aggregation"]
+    h_6["Deployment"]
+    h_1 --> h_2
+    h_2 --> h_3
+    h_3 --> h_4
+    h_4 --> h_5
+    h_5 --> h_6
+  end
+  fail["Failure / abstain"]
+  h_6 -.-> fail

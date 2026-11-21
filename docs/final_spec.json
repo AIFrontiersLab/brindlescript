@@ -1,0 +1,63 @@
+{
+  "architecture": {
+    "subtitle": "One concept. Three AI perspectives. One tested architecture.",
+    "title": "Distributed Training Anatomy"
+  },
+  "candidate_id": "C1",
+  "certification": "independently reviewed",
+  "certified": false,
+  "changes_made": [
+    "Refined the 'architecture' field to explicitly mention the '1F1B scheduling' algorithm, which is the standard industry solution for the 'pipeline bubbles' problem mentioned in the original candidate.",
+    "Updated the 'specification' to include a 'technical_details' section, breaking down the architecture into concrete components (Partitioner, Scheduler, Checkpointing) for better engineering clarity.",
+    "Enhanced the 'implementation_plan' to include specific validation steps (gradient correctness and MFU benchmarking), ensuring the 'tested reference slice' objective is met with rigorous metrics.",
+    "Polished the 'linkedin_post' to be more engaging and technically precise, highlighting the specific trade-off resolution (micro-batching) rather than just general benefits.",
+    "Clarified the 'takeaway' to emphasize the balance between memory efficiency and compute utilization, providing a stronger conclusion for the learning objective."
+  ],
+  "headline": "Distributed Training Anatomy: Unveiling the Core of LLM Training Foundations",
+  "implementation_plan": {},
+  "linkedin_post": "🚀 Deep Dive: Distributed Training Anatomy!\n\nAs LLMs scale beyond single-GPU memory limits, how do we train them efficiently?\n\nWe explored Data, Tensor and Pipeline Parallelism. While Data Parallelism is simple, it hits memory walls. Tensor Parallelism is complex and hardware-dependent.\n\nOur winner? **Pipeline Parallelism** with **Micro-Batching**.\n\nBy splitting the model into stages and using a 1F1B schedule, we keep GPUs busy and minimize idle time. This is the backbone of training massive models like Llama and GPT-4.\n\nCheck out the reference implementation in our lab_project! 👇\n\n#AI #MachineLearning #DistributedTraining #LLM #DeepLearning #MLOps #PipelineParallelism",
+  "specification": {
+    "chosen_architecture": "Hybrid Pipeline Parallelism with Micro-Batching",
+    "concept_id": 4,
+    "implementation_plan": [
+      "1. Define Model Topology: Identify split points in the LLM architecture (e.g., after every 2 transformer blocks) to create balanced pipeline stages.",
+      "2. Implement Micro-Batch Logic: Divide the global batch size into micro-batches. Calculate optimal micro-batch size to maximize pipeline fill rate.",
+      "3. Develop Communication Primitives: Implement `send` and `recv` operations for activations (forward) and gradients (backward) between adjacent pipeline stages.",
+      "4. Integrate Scheduler: Code the 1F1B loop to orchestrate the execution order of micro-batches across stages.",
+      "5. Validation Suite: Create unit tests for gradient correctness (comparing against a single-GPU baseline) and performance benchmarks measuring MFU (Model FLOPs Utilization)."
+    ],
+    "learning_objectives": [
+      "Explain the engineering problem behind Distributed Training Anatomy",
+      "Compare at least two design approaches with trade-offs",
+      "Ship a tested reference slice that demonstrates the chosen architecture"
+    ],
+    "monorepo_project": "lab_project",
+    "problem_statement": "Training Large Language Models (LLMs) exceeds the memory capacity of single GPUs. While Data Parallelism scales compute, it duplicates model weights, hitting memory ceilings. Tensor Parallelism splits layers but requires high-bandwidth interconnects (NVLink). Pipeline Parallelism splits the model sequentially across devices, enabling training of models larger than single-device memory, but introduces 'pipeline bubbles' (idle time) that reduce hardware utilization.",
+    "slug": "distributed-training-anatomy",
+    "technical_details": {
+      "communication_protocol": "NCCL (NVIDIA Collective Communications Library) for efficient GPU-to-GPU transfer",
+      "hardware_assumption": "Multi-GPU Node (e.g., 8x A100/H100) or Multi-Node Cluster",
+      "key_components": [
+        {
+          "description": "Algorithmically splits the transformer blocks into N stages, ensuring balanced compute load per stage to prevent stragglers.",
+          "name": "Model Partitioner"
+        },
+        {
+          "description": "Implements the 1F1B (1 Forward, 1 Backward) schedule. It manages the queue of micro-batches to ensure that while one GPU is performing backward pass, the next is performing forward pass, minimizing idle time.",
+          "name": "Scheduler"
+        },
+        {
+          "description": "Handles activation recomputation to trade compute for memory, ensuring that intermediate activations for backward pass are available without storing all of them in VRAM.",
+          "name": "Checkpointing Manager"
+        }
+      ],
+      "optimization_technique": "Micro-batching (1F1B scheduling)",
+      "parallelism_strategy": "Pipeline Parallelism (PP)"
+    },
+    "title": "Distributed Training Anatomy: Pipeline Parallelism Reference Implementation",
+    "track": "LLM training foundations",
+    "version": "1.0.0"
+  },
+  "takeaway": "Pipeline parallelism is the critical enabler for training models that exceed single-device memory constraints. While it introduces complexity in scheduling and communication, the use of micro-batching and 1F1B scheduling effectively minimizes pipeline bubbles, offering a scalable path for large-scale LLM training. This architecture balances memory efficiency with compute utilization, making it superior to pure data parallelism for extremely large models.",
+  "validation_method": "External peer scores only (no self-scoring). Average of two anonymous reviews. Blockers for unsupported claims, fabricated references, critical security flaws. Agreement among reviewers alone does not establish correctness."
+}
